@@ -72,6 +72,19 @@
 - Display a win/loss message in the HTML.
 ```
 ## Initial Data Structure for Checkers Game State
+### Explanation:
+```plaintext
+board: A 2D array representing the 8x8 game board. Each element can be:
+
+null for an empty cell,
+'P1' for a Player 1 piece,
+'P2' for a Player 2 piece.
+currentPlayer: A string indicating whose turn it is. It can be 'P1' or 'P2'.
+
+selectedPiece: An object representing the currently selected piece. It will store the piece's position on the board (e.g., { row: 5, col: 2 }). Initially, it is set to null.
+
+possibleMoves: An array of possible moves for the selected piece. Each move is represented as an object with row and col properties (e.g., { row: 4, col: 3 }). Initially, it is an empty array.
+```
 
 ```javascript
 const gameState = {
