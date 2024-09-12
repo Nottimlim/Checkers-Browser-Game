@@ -21,11 +21,11 @@
 ```plaintext
 - Add event listeners to all pieces.
 - When a piece is clicked:
-  - Check if the piece belongs to the current player.
-  -  If yes, set selectedPiece to the clicked piece's
+  * Check if the piece belongs to the current player.
+  *  If yes, set selectedPiece to the clicked piece's
      position.
-  -  Calculate possible moves for the selected piece.
-  - Highlight the possible moves on the board.
+  *  Calculate possible moves for the selected piece.
+  * Highlight the possible moves on the board.
 ```
 ### Calculate Possible Moves:
 ```plaintext
@@ -72,7 +72,7 @@
 - Display a win/loss message in the HTML.
 ```
 ## Initial Data Structure for Checkers Game State
-### Explanation:
+### Explanation
 ```plaintext
 board: A 2D array representing the 8x8 game board. Each element can be:
 
