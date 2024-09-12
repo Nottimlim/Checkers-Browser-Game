@@ -34,26 +34,34 @@
     (P1 moves up, P2 moves down).
 - For each direction:
     * Calculate the new position.
-    * Check if the new position is within bounds and the cell is empty.
-    * If yes, add the new position to the possible moves 
+    * Check if the new position is 
+    within bounds and the cell is empty.
+    * If yes, add the new position to 
+      the possible moves 
       array.
 - Check for capture moves:
-    * Calculate the position of the opponent's piece.
-    * Calculate the landing position after the capture.
-    * Check if the landing position is within bounds and
+    * Calculate the position of the
+      opponent's piece.
+    * Calculate the landing position
+      after the capture.
+    * Check if the landing position is
+      within bounds and
       the cell is empty.
-    * If yes, add the landing position to the possible 
-      moves array.
+    * If yes, add the landing position
+      to the possible moves array.
 - Return the possible moves array.
 ```
 ### Handle Move:
 ``` plaintext
 - Add event listeners to all highlighted cells (possible moves).
 - When a highlighted cell is clicked:
-    * Move the selected piece to the new position.
+    * Move the selected piece to the new
+      position.
     * Update the board state.
-    * If it's a capture move, remove the captured piece from the board.
-    * Clear the selected piece and possible moves.
+    * If it's a capture move, remove the 
+     captured piece from the board.
+    * Clear the selected piece and
+      possible moves.
     * Switch the current player.
     * Check for win condition.
 ```
