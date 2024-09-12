@@ -1,0 +1,100 @@
+/* General styles */
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #1d1d1d; /* Dark background */
+    color: #FFFFFF; /* Light text color */
+}
+
+/* Header styles */
+header {
+    letter-spacing:5px;
+    text-align: center;
+    margin-bottom: 21px;
+}
+
+#logo {
+    width: 311px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 1px; /* Space between the logo and the player turn indicator */
+}
+
+#player-turn {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+/* Game container styles */
+#game-container {
+    display: grid;
+    grid-template-rows: repeat(8, 50px); /* Ensure each row has a fixed height */
+    grid-template-columns: repeat(8, 50px); /* Ensure each column has a fixed width */
+    gap: 2px;
+    border: 2px solid #FFFFFF; /* White border around the game container */
+    padding: 10px; /* Padding around the game container */
+    background-color: #1E1E1E; /* Dark background for the game container */
+    border-radius: 10px; /* Rounded corners for a modern look */
+}
+
+/* Cell styles */
+.cell {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px; /* Rounded corners for a modern look */
+}
+
+.cell:nth-child(even) {
+    background-color: #2E2E2E; /* Darker color for even cells */
+}
+
+.cell:nth-child(odd) {
+    background-color: #3E3E3E; /* Lighter color for odd cells */
+}
+
+/* Piece styles */
+.piece {
+    width: 40px;
+    height: 40px;
+    border-radius: 51%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow for a modern look */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.piece::before {
+    content: '';
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.player1 {
+    background-color: #FF0000; /* Red for Player 1 */
+}
+
+.player1::before {
+    background-color: #FF6666; /* Lighter red for inner shadow */
+}
+
+.player2 {
+    background-color: #FFFFFF; /* White for Player 2 */
+}
+
+.player2::before {
+    background-color: #CCCCCC; /* Light gray for inner shadow */
+}
+
