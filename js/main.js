@@ -62,6 +62,8 @@ function handlePieceClick(event) {
     const row = piece.parentElement.dataset.row;
     const col = piece.parentElement.dataset.col;
 
+    console.log(`Piece clicked: Row ${row}, Col ${col}`);
+
     if (gameState.board[row][col] !== gameState.currentPlayer) {
         return; // Not the current player's piece
     }
@@ -107,6 +109,8 @@ function handleMove(event) {
     const cell = event.target;
     const newRow = parseInt(cell.dataset.row);
     const newCol = parseInt(cell.dataset.col);
+
+    console.log(`Move to: Row ${newRow}, Col ${newCol}`);
 
     // Move the selected piece to the new position
     gameState.board[newRow][newCol] = gameState.currentPlayer;
