@@ -59,6 +59,12 @@ header {
     background-color: #3E3E3E; /* Lighter color for odd cells */
 }
 
+/* King piece styles */
+.king {
+    background-image: url('/images/crown.png');
+    background-size: auto;
+    background-position: center;
+}
 /* Piece styles */
 .piece {
     width: 40px;

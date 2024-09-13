@@ -30,13 +30,16 @@ function renderBoard() {
             aCell.dataset.row = rowIndex;
             aCell.dataset.col = colIndex;
 
-            if (cell === 'P1') {
+            if (cell) {
                 const piece = document.createElement('div');
-                piece.className = 'piece player1';
-                aCell.appendChild(piece);
-            } else if (cell === 'P2') {
-                const piece = document.createElement('div');
-                piece.className = 'piece player2';
+                if (cell.includes('P1')) {
+                    piece.className = 'piece player1';
+                } else if (cell.includes('P2')) {
+                    piece.className = 'piece player2';
+                }
+                if (cell.includes('K')) {
+                    piece.classList.add('king');
+                }
                 aCell.appendChild(piece);
             }
 
@@ -103,26 +106,27 @@ function highlightPossibleMoves() {
 
 function calculatePossibleMoves(piece) {
     const possibleMoves = [];
-    const directions = gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
-    const captureDirections = gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]];
-    
+    const isKing = gameState.board[piece.row][piece.col].includes('K');
+    const directions = isKing ? [[-1, -1], [-1, 1], [1, -1], [1, 1]] : (gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]]);
+    const captureDirections = isKing ? [[-2, -2], [-2, 2], [2, -2], [2, 2]] : (gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]]);
+
     directions.forEach((direction, index) => {
         const newRow = piece.row + direction[0];
         const newCol = piece.col + direction[1];
 
         if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
             if (gameState.board[newRow][newCol] === null) {
-            possibleMoves.push({ row: newRow, col: newCol });
-        } else {
-            const captureRow = piece.row + captureDirections[index][0];
-            const captureCol = piece.col + captureDirections[index][1];
+                possibleMoves.push({ row: newRow, col: newCol });
+            } else {
+                const captureRow = piece.row + captureDirections[index][0];
+                const captureCol = piece.col + captureDirections[index][1];
                 if (captureRow >= 0 && captureRow < 8 && captureCol >= 0 && captureCol < 8 &&
                     gameState.board[newRow][newCol] !== gameState.currentPlayer &&
-            gameState.board[captureRow][captureCol] === null) {
+                    gameState.board[captureRow][captureCol] === null) {
                     possibleMoves.push({ row: captureRow, col: captureCol, capture: { row: newRow, col: newCol } });
+                }
             }
         }
-}
     });
 
     return possibleMoves;
@@ -142,17 +146,55 @@ function handleMove(event) {
     }
 
     // Move the selected piece to the new position
-    gameState.board[newRow][newCol] = gameState.currentPlayer;
+    gameState.board[newRow][newCol] = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col]; // Preserve 'K' if present
     gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
+
+    // Promote to king if reaching the opposite end
+    if ((gameState.currentPlayer === 'P1' && newRow === 0) || (gameState.currentPlayer === 'P2' && newRow === 7)) {
+        gameState.board[newRow][newCol] += 'K';
+    }
+
     gameState.selectedPiece = null;
     gameState.possibleMoves = [];
 
     renderBoard(); // Re-render the board to reflect the move
     switchPlayer(); // Switch to the other player's turn
+    checkWinCondition(); // Check for win/loss condition
 }
 
 function switchPlayer() {
     gameState.currentPlayer = gameState.currentPlayer === 'P1' ? 'P2' : 'P1';
+    updatePlayerTurn();
+}
+
+function checkWinCondition() {
+    const player1Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P1')).length;
+    const player2Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P2')).length;
+
+    if (player1Pieces === 0) {
+        alert('Player 2 wins!');
+        resetGame();
+    } else if (player2Pieces === 0) {
+        alert('Player 1 wins!');
+        resetGame();
+    }
+}
+
+function resetGame() {
+    gameState.board = [
+        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
+        ['P2', null, 'P2', null, 'P2', null, 'P2', null],
+        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
+        [null, 'P1', null, 'P1', null, 'P1', null, 'P1'],
+        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
+    ];
+    gameState.currentPlayer = 'P1';
+    gameState.selectedPiece = null;
+    gameState.possibleMoves = [];
+    renderBoard();
     updatePlayerTurn();
 }
 
