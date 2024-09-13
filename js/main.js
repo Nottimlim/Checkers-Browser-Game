@@ -48,8 +48,33 @@ function renderBoard() {
     });
 }
 
+function handlePieceClick(event) {
+    const piece = event.target;
+    const row = piece.parentElement.dataset.row;
+    const col = piece.parentElement.dataset.col;
+    if (gameState.board[row][col] !== gameStateState.currentPlayer) {
+        return; // Not current players piece
+    }
+    gameState.selectedPiece = { row: parseInt(row), col: parseInt(col)};
+    highlightPossibleMoves();
+}
+
+function updatePlayerTurn() {
+    const playerTurnE = document.getElementById('player-turn');
+    playerTurnE.innerHTML = `<b> Current Player: ${gameState.currentPlayer}</b>`;
+}
+
+function switchPlayer() {
+    gameState.currentPlayer = gameState.currentPlayer === 'P1' ? 'P2' : 'P1';
+    updatePlayerTurn();
+}
 // DOM
 
 document.addEventListener('DOMContentLoaded', () => {
     renderBoard();
+    updatePlayerTurn();
+});
+
+document.querySelectorAll('.piece').forEach(piece => {
+    piece.addEventListener('click', handlePieceClick); 
 });
