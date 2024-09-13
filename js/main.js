@@ -68,6 +68,16 @@ function handlePieceClick(event) {
         return; // Not the current player's piece
     }
 
+    // Deselect previously selected piece
+    if (gameState.selectedPiece) {
+        const prevSelectedPiece = document.querySelector('.selected');
+        if (prevSelectedPiece) {
+            prevSelectedPiece.classList.remove('selected');
+        }
+    }
+
+    // Select the new piece
+    piece.classList.add('selected');
     gameState.selectedPiece = { row: parseInt(row), col: parseInt(col) };
     highlightPossibleMoves();
 }
@@ -81,6 +91,8 @@ function highlightPossibleMoves() {
     });
 
     gameState.possibleMoves = calculatePossibleMoves(gameState.selectedPiece);
+
+    console.log('Possible moves:', gameState.possibleMoves);
 
     gameState.possibleMoves.forEach(move => {
         const cell = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);

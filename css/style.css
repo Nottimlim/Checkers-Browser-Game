@@ -101,4 +101,10 @@ header {
 /* Highlight styles */
 .highlight {
     background-color: #FFD700; /* Gold color for highlighted cells */
+    box-shadow: inset 0 0 10px #FFD700; /* Inset shadow */
+    border: qpx solid #FFD700; /* Add a border for better visibility */
+}
+.selected {
+    border: 2px solid #FFD700; /* Gold border to indicate selection */
+    box-shadow: 0 0 11px #FFD700; /* Gold shadow for better visibility */
 }
