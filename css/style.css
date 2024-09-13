@@ -21,8 +21,7 @@ header {
 }
 
 #logo {
-    width: 311px; /* Adjust the width as needed */
-    width: 150px; /* Adjust the width as needed */
+    width: 255px; /* Adjust the width as needed */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 1px; /* Space between the logo and the player turn indicator */
     margin-bottom: 10px; /* Space between the logo and the player turn indicator */
@@ -41,8 +40,6 @@ header {
     gap: 2px;
     border: 2px solid #FFFFFF; /* White border around the game container */
     padding: 10px; 
-    background-color: #1E1E1E; /* Dark background for the game container */
-    padding: 10px; /* Padding around the game container */
     background-color: #1E1E1E; /* Dark background for the game container */
     border-radius: 10px; /* Rounded corners for a modern look */
 }
