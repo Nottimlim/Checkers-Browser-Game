@@ -39,13 +39,12 @@ function renderBoard() {
                 }
                 if (cell.includes('K')) {
                     piece.classList.add('king');
+                    console.log('King piece:', piece);
                 }
                 aCell.appendChild(piece);
             }
-
             rowElement.appendChild(aCell);
         });
-
         gameContainer.appendChild(rowElement);
     });
 
@@ -53,7 +52,7 @@ function renderBoard() {
     document.querySelectorAll('.piece').forEach(piece => {
         piece.addEventListener('click', handlePieceClick);
     });
-}
+};
 
 function updatePlayerTurn() {
     const playerTurnElement = document.getElementById('player-turn');
@@ -89,31 +88,37 @@ function highlightPossibleMoves() {
     // Clear previous highlights
     gameState.possibleMoves.forEach(move => {
         const cell = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);
-        cell.classList.remove('highlight');
-        cell.removeEventListener('click', handleMove); // Remove previous event listeners
+        if (cell) {
+            cell.classList.remove('highlight');
+            cell.removeEventListener('click', handleMove); // Remove previous event listeners
+        }
     });
 
+    // Calculate and highlight new possible moves
     gameState.possibleMoves = calculatePossibleMoves(gameState.selectedPiece);
-
-    console.log('Possible moves:', gameState.possibleMoves);
+    console.log('Calculated possible moves for highlighting:', gameState.possibleMoves);
 
     gameState.possibleMoves.forEach(move => {
         const cell = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);
-        cell.classList.add('highlight');
-        cell.addEventListener('click', handleMove); // Add new event listeners
+        if (cell) {
+            cell.classList.add('highlight');
+            cell.addEventListener('click', handleMove); // Add new event listeners
+        }
     });
 }
 
 function calculatePossibleMoves(piece) {
     const possibleMoves = [];
     const isKing = gameState.board[piece.row][piece.col].includes('K');
+    console.log(`Calculating moves for piece at Row ${piece.row}, Col ${piece.col}. Is King: ${isKing}`);
+
+    // Define directions for normal and king pieces
     const directions = isKing ? [[-1, -1], [-1, 1], [1, -1], [1, 1]] : (gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]]);
     const captureDirections = isKing ? [[-2, -2], [-2, 2], [2, -2], [2, 2]] : (gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]]);
 
     directions.forEach((direction, index) => {
         const newRow = piece.row + direction[0];
         const newCol = piece.col + direction[1];
-
         if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
             if (gameState.board[newRow][newCol] === null) {
                 possibleMoves.push({ row: newRow, col: newCol });
@@ -129,34 +134,38 @@ function calculatePossibleMoves(piece) {
         }
     });
 
+    console.log('Possible moves:', possibleMoves);
     return possibleMoves;
 }
+
 
 function handleMove(event) {
     const cell = event.target;
     const newRow = parseInt(cell.dataset.row);
     const newCol = parseInt(cell.dataset.col);
-
     console.log(`Move to: Row ${newRow}, Col ${newCol}`);
 
+    // Check if the move is a capture move
     const captureMove = gameState.possibleMoves.find(move => move.row === newRow && move.col === newCol && move.capture);
-
     if (captureMove) {
         gameState.board[captureMove.capture.row][captureMove.capture.col] = null; // Remove captured piece
     }
 
     // Move the selected piece to the new position
     gameState.board[newRow][newCol] = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col]; // Preserve 'K' if present
-    gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
+    gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col] = null; // Correctly clear the original position
 
-    // Promote to king if reaching the opposite end
+    // Debugging: Before promotion
+    console.log('Before Promotion:', gameState.board[newRow][newCol]);
+
+    // Promote to king if reaching the opposite end (for normal pieces)
     if ((gameState.currentPlayer === 'P1' && newRow === 0) || (gameState.currentPlayer === 'P2' && newRow === 7)) {
         gameState.board[newRow][newCol] += 'K';
+        console.log('After Promotion:', gameState.board[newRow][newCol]);
     }
 
     gameState.selectedPiece = null;
     gameState.possibleMoves = [];
-
     renderBoard(); // Re-render the board to reflect the move
     switchPlayer(); // Switch to the other player's turn
     checkWinCondition(); // Check for win/loss condition
