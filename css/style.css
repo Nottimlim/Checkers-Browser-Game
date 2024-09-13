@@ -98,3 +98,7 @@ header {
     background-color: #CCCCCC; /* Light gray for inner shadow */
 }
 
+/* Highlight styles */
+.highlight {
+    background-color: #FFD700; /* Gold color for highlighted cells */
+}
