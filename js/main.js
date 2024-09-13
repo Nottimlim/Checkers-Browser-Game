@@ -104,14 +104,25 @@ function highlightPossibleMoves() {
 function calculatePossibleMoves(piece) {
     const possibleMoves = [];
     const directions = gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
-
-    directions.forEach(direction => {
+    const captureDirections = gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]];
+    
+    directions.forEach((direction, index) => {
         const newRow = piece.row + direction[0];
         const newCol = piece.col + direction[1];
 
-        if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8 && gameState.board[newRow][newCol] === null) {
+        if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+            if (gameState.board[newRow][newCol] === null) {
             possibleMoves.push({ row: newRow, col: newCol });
+        } else {
+            const captureRow = piece.row + captureDirections[index][0];
+            const captureCol = piece.col + captureDirections[index][1];
+                if (captureRow >= 0 && captureRow < 8 && captureCol >= 0 && captureCol < 8 &&
+                    gameState.board[newRow][newCol] !== gameState.currentPlayer &&
+            gameState.board[captureRow][captureCol] === null) {
+                    possibleMoves.push({ row: captureRow, col: captureCol, capture: { row: newRow, col: newCol } });
+            }
         }
+}
     });
 
     return possibleMoves;
@@ -123,6 +134,12 @@ function handleMove(event) {
     const newCol = parseInt(cell.dataset.col);
 
     console.log(`Move to: Row ${newRow}, Col ${newCol}`);
+
+    const captureMove = gameState.possibleMoves.find(move => move.row === newRow && move.col === newCol && move.capture);
+
+    if (captureMove) {
+        gameState.board[captureMove.capture.row][captureMove.capture.col] = null; // Remove captured piece
+    }
 
     // Move the selected piece to the new position
     gameState.board[newRow][newCol] = gameState.currentPlayer;
