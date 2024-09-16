@@ -1,18 +1,28 @@
 // Variables
+const initialBoard = [
+    [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
+    ['P2', null, 'P2', null, 'P2', null, 'P2', null],
+    [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['P1', null, 'P1', null, 'P1', null, 'P1', null],
+    [null, 'P1', null, 'P1', null, 'P1', null, 'P1'],
+    ['P1', null, 'P1', null, 'P1', null, 'P1', null],
+];
+
 const gameState = {
-    board: [
-        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-        ['P2', null, 'P2', null, 'P2', null, 'P2', null],
-        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-        [null, 'P1', null, 'P1', null, 'P1', null, 'P1'],
-        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-    ],
+    board: initialBoard.map(row => row.slice()), // Deep copy of the initial board
     currentPlayer: 'P1',
     selectedPiece: null,
     possibleMoves: [],
+    playerNames: {
+        P1: '',
+        P2: ''
+    },
+    captures: {
+        P1: 0,
+        P2: 0
+    }
 };
 
 // Functions
@@ -30,16 +40,19 @@ function renderBoard() {
             aCell.dataset.row = rowIndex;
             aCell.dataset.col = colIndex;
 
+            // Apply alternating colors
+            if ((rowIndex + colIndex) % 2 === 0) {
+                aCell.classList.add('light');
+            } else {
+                aCell.classList.add('dark');
+            }
+
             if (cell) {
                 const piece = document.createElement('div');
                 if (cell.includes('P1')) {
                     piece.className = 'piece player1';
                 } else if (cell.includes('P2')) {
                     piece.className = 'piece player2';
-                }
-                if (cell.includes('K')) {
-                    piece.classList.add('king');
-                    console.log('King piece:', piece);
                 }
                 aCell.appendChild(piece);
             }
@@ -52,24 +65,29 @@ function renderBoard() {
     document.querySelectorAll('.piece').forEach(piece => {
         piece.addEventListener('click', handlePieceClick);
     });
-};
+}
 
 function updatePlayerTurn() {
     const playerTurnElement = document.getElementById('player-turn');
-    playerTurnElement.innerHTML = `<b>Current Player: ${gameState.currentPlayer}</b>`;
+    playerTurnElement.innerHTML = `<b>Current Player: ${gameState.playerNames[gameState.currentPlayer]}</b>`;
+}
+
+function updateCaptures() {
+    document.getElementById('player1-capture-title').innerText = `${gameState.playerNames.P1} has captured:`;
+    document.getElementById('player2-capture-title').innerText = `${gameState.playerNames.P2} has captured:`;
+    document.getElementById('player1-captured-pieces').innerText = gameState.captures.P1;
+    document.getElementById('player2-captured-pieces').innerText = gameState.captures.P2;
 }
 
 function handlePieceClick(event) {
     const piece = event.target;
     const row = piece.parentElement.dataset.row;
     const col = piece.parentElement.dataset.col;
-
     console.log(`Piece clicked: Row ${row}, Col ${col}`);
-
+    console.log(`Piece value: ${gameState.board[row][col]}`); // Add this line to debug the piece value
     if (gameState.board[row][col] !== gameState.currentPlayer) {
         return; // Not the current player's piece
     }
-
     // Deselect previously selected piece
     if (gameState.selectedPiece) {
         const prevSelectedPiece = document.querySelector('.selected');
@@ -77,7 +95,6 @@ function handlePieceClick(event) {
             prevSelectedPiece.classList.remove('selected');
         }
     }
-
     // Select the new piece
     piece.classList.add('selected');
     gameState.selectedPiece = { row: parseInt(row), col: parseInt(col) };
@@ -109,12 +126,8 @@ function highlightPossibleMoves() {
 
 function calculatePossibleMoves(piece) {
     const possibleMoves = [];
-    const isKing = gameState.board[piece.row][piece.col].includes('K');
-    console.log(`Calculating moves for piece at Row ${piece.row}, Col ${piece.col}. Is King: ${isKing}`);
-
-    // Define directions for normal and king pieces
-    const directions = isKing ? [[-1, -1], [-1, 1], [1, -1], [1, 1]] : (gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]]);
-    const captureDirections = isKing ? [[-2, -2], [-2, 2], [2, -2], [2, 2]] : (gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]]);
+    const directions = gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+    const captureDirections = gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]];
 
     directions.forEach((direction, index) => {
         const newRow = piece.row + direction[0];
@@ -138,7 +151,6 @@ function calculatePossibleMoves(piece) {
     return possibleMoves;
 }
 
-
 function handleMove(event) {
     const cell = event.target;
     const newRow = parseInt(cell.dataset.row);
@@ -149,20 +161,13 @@ function handleMove(event) {
     const captureMove = gameState.possibleMoves.find(move => move.row === newRow && move.col === newCol && move.capture);
     if (captureMove) {
         gameState.board[captureMove.capture.row][captureMove.capture.col] = null; // Remove captured piece
+        gameState.captures[gameState.currentPlayer]++; // Increase the capture count
+        updateCaptures(); // Update the UI to show captured pieces
     }
 
     // Move the selected piece to the new position
-    gameState.board[newRow][newCol] = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col]; // Preserve 'K' if present
+    gameState.board[newRow][newCol] = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
     gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col] = null; // Correctly clear the original position
-
-    // Debugging: Before promotion
-    console.log('Before Promotion:', gameState.board[newRow][newCol]);
-
-    // Promote to king if reaching the opposite end (for normal pieces)
-    if ((gameState.currentPlayer === 'P1' && newRow === 0) || (gameState.currentPlayer === 'P2' && newRow === 7)) {
-        gameState.board[newRow][newCol] += 'K';
-        console.log('After Promotion:', gameState.board[newRow][newCol]);
-    }
 
     gameState.selectedPiece = null;
     gameState.possibleMoves = [];
@@ -174,41 +179,67 @@ function handleMove(event) {
 function switchPlayer() {
     gameState.currentPlayer = gameState.currentPlayer === 'P1' ? 'P2' : 'P1';
     updatePlayerTurn();
+    checkForLegalMoves(); // Check if the new current player has any legal moves
+}
+
+function checkForLegalMoves() {
+    const currentPlayerPieces = gameState.board.flatMap((row, rowIndex) =>
+        row.map((cell, colIndex) => (cell === gameState.currentPlayer ? { row: rowIndex, col: colIndex } : null))
+    ).filter(piece => piece !== null);
+
+    const hasLegalMoves = currentPlayerPieces.some(piece => calculatePossibleMoves(piece).length > 0);
+
+    if (!hasLegalMoves) {
+        alert(`${gameState.playerNames[gameState.currentPlayer === 'P1' ? 'P2' : 'P1']} wins!`);
+        resetGame();
+    }
 }
 
 function checkWinCondition() {
     const player1Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P1')).length;
     const player2Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P2')).length;
-
     if (player1Pieces === 0) {
-        alert('Player 2 wins!');
+        alert(`${gameState.playerNames['P2']} wins! We know who the better player is now!`);
         resetGame();
     } else if (player2Pieces === 0) {
-        alert('Player 1 wins!');
+        alert(`${gameState.playerNames['P1']} wins! We know who the better player is now!`);
         resetGame();
     }
 }
 
 function resetGame() {
-    gameState.board = [
-        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-        ['P2', null, 'P2', null, 'P2', null, 'P2', null],
-        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-        [null, 'P1', null, 'P1', null, 'P1', null, 'P1'],
-        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-    ];
+    gameState.board = initialBoard.map(row => row.slice()); // Deep copy of the initial board
     gameState.currentPlayer = 'P1';
     gameState.selectedPiece = null;
     gameState.possibleMoves = [];
+    gameState.captures = { P1: 0, P2: 0 }; // Reset capture counts
     renderBoard();
     updatePlayerTurn();
+    updateCaptures(); // Reset the UI for captured pieces
 }
+
+// Handle form submission to capture player names and start the game
+document.getElementById('name-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const player1Name = document.getElementById('player1-name').value;
+    const player2Name = document.getElementById('player2-name').value;
+    gameState.playerNames.P1 = player1Name;
+    gameState.playerNames.P2 = player2Name;
+
+    // Hide the name input screen and show the game screen
+    document.getElementById('name-input-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+
+    // Display the popup with player colors
+    alert(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
+
+    // Start the game
+    renderBoard();
+    updatePlayerTurn();
+    updateCaptures(); // Initialize the captured pieces display
+});
 
 // DOM
 document.addEventListener('DOMContentLoaded', () => {
-    renderBoard();
-    updatePlayerTurn();
+    // Initial setup if needed
 });

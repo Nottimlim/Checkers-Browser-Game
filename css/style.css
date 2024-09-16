@@ -7,29 +7,60 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #1d1d1d; /* Dark background */
     background-color: #121212; /* Dark background */
     color: #FFFFFF; /* Light text color */
 }
 
 /* Header styles */
 header {
-    letter-spacing:5px;
+    letter-spacing: 5px;
     text-align: center;
-    margin-bottom: 21px;
+    font-size: 22px;
     margin-bottom: 20px;
 }
 
 #logo {
-    width: 255px; /* Adjust the width as needed */
+    width: 256px; /* Adjust the width as needed */
     height: auto; /* Maintain aspect ratio */
-    margin-bottom: 1px; /* Space between the logo and the player turn indicator */
-    margin-bottom: 10px; /* Space between the logo and the player turn indicator */
 }
 
-#player-turn {
-    font-size: 1.2em;
-    margin-top: 10px;
+/* Form styles */
+#name-form {
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+    justify-content: center; /* Center children horizontally */
+    align-items: center; /* Center children vertically */
+    height: auto; /* Adjust the height as needed */
+}
+
+#name-form > div {
+    margin-bottom: 10px; /* Add space between the text boxes */
+}
+
+.button-container {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    align-items: center; /* Center the button vertically */
+    margin-top: 20px; /* Add space above the button */
+}
+
+.button-container button {
+    padding: 6px 22px; /* Increase the padding inside the button */
+    font-size: 18px; /* Increase the font size of the button text */
+}
+
+/* Capture area styles */
+#capture-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+}
+
+.capture-container {
+    width: 150px;
+    text-align: center;
 }
 
 /* Game container styles */
@@ -37,10 +68,8 @@ header {
     display: grid;
     grid-template-rows: repeat(8, 50px); /* Ensure each row has a fixed height */
     grid-template-columns: repeat(8, 50px); /* Ensure each column has a fixed width */
-    gap: 2px;
     border: 2px solid #FFFFFF; /* White border around the game container */
-    padding: 10px; 
-    background-color: #1E1E1E; /* Dark background for the game container */
+    padding: 10px;
     border-radius: 10px; /* Rounded corners for a modern look */
 }
 
@@ -54,25 +83,19 @@ header {
     border-radius: 5px; /* Rounded corners for a modern look */
 }
 
-.cell:nth-child(even) {
-    background-color: #2E2E2E; /* Darker color for even cells */
+.cell.light {
+    background-color: #FFFFFF; /* White color for cells */
 }
 
-.cell:nth-child(odd) {
-    background-color: #3E3E3E; /* Lighter color for odd cells */
+.cell.dark {
+    background-color: #7a7a7a; /* Navy blue color for cells */
 }
 
-/* King piece styles */
-.king {
-    background-image: url('/images/crown.png');
-    background-size: auto;
-    background-position: center;
-}
 /* Piece styles */
 .piece {
     width: 40px;
     height: 40px;
-    border-radius: 51%;
+    border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow for a modern look */
     display: flex;
     justify-content: center;
@@ -100,19 +123,20 @@ header {
 }
 
 .player2 {
-    background-color: #FFFFFF; /* White for Player 2 */
+    background-color: #000000; /* Black for Player 2 */
 }
 
 .player2::before {
-    background-color: #CCCCCC; /* Light gray for inner shadow */
+    background-color: #333333; /* Dark gray for inner shadow */
 }
 
 /* Highlight styles */
 .highlight {
     background-color: #FFD700; /* Gold color for highlighted cells */
-    box-shadow: inset 0 0 10px #FFD700; /* Inset shadow */
-    border: 1px solid #FFD700; /* Adds border for better visibility */
+    box-shadow: inset 0 0 18px #FFD700; /* Inset shadow */
+    border: .5px solid #FFD700; /* Adds border for better visibility */
 }
+
 .selected {
     border: 2px solid #FFD700; /* Gold border to indicate selection */
     box-shadow: 0 0 11px #FFD700; /* Gold shadow for better visibility */
