@@ -239,6 +239,16 @@ document.getElementById('name-form').addEventListener('submit', function(event) 
     updateCaptures(); // Initialize the captured pieces display
 });
 
+// Handle theme switch
+document.getElementById('theme-switch-button').addEventListener('click', function() {
+    const themeStylesheet = document.getElementById('theme-stylesheet');
+    if (themeStylesheet.getAttribute('href') === '/css/modern-theme.css') {
+        themeStylesheet.setAttribute('href', '/css/classic-theme.css');
+    } else {
+        themeStylesheet.setAttribute('href', '/css/modern-theme.css');
+    }
+});
+
 // DOM
 document.addEventListener('DOMContentLoaded', () => {
     // Initial setup if needed
