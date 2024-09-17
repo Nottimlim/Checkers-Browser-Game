@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkers</title>
+    <title>Checkers Game</title>
     <link id="theme-stylesheet" rel="stylesheet" href="/css/modern-theme.css">
+    <link rel="icon" href="/images/favicon.ico">
 </head>
 <body>
     <div id="name-input-screen">
@@ -29,7 +30,8 @@
         <header>
             <img src="images/checkers-reference.png" alt="Checkers Logo" id="logo">
             <div id="player-turn"><b>Current Player:</b></div>
-            <button id="theme-switch-button">Switch Theme</button>
+            <button id="theme-switch-button" class="modern-button">Switch Theme</button>
+            <button id="how-to-play-button" class="modern-button">How to Play</button>
         </header>
         <div id="capture-area">
             <div id="player2-captures" class="capture-container">
@@ -45,6 +47,31 @@
             </div>
         </div>
     </div>
+    <!-- Player Announcement Modal -->
+    <div id="player-announcement-modal" class="modal">
+        <div class="modal-content">
+            <p id="player-announcement-text"></p>
+            <button id="player-announcement-close" class="modal-button">OK</button>
+        </div>
+    </div>
+    <!-- Win Announcement Modal -->
+    <div id="win-announcement-modal" class="modal">
+        <div class="modal-content">
+            <p id="win-announcement-text"></p>
+            <button id="win-announcement-close" class="modal-button">OK</button>
+        </div>
+    </div>
+    <!-- How to Play Modal -->
+    <div id="how-to-play-modal" class="modal">
+        <div class="modal-content">
+            <h2>How to Play</h2>
+            <p>Checkers is a two-player game where the goal is to capture all of the opponent's pieces or block them so they cannot move.</p>
+            <p>Players take turns moving their pieces diagonally forward. If a player can jump over an opponent's piece, they capture it.</p>
+            <p>The game ends when one player captures all of the opponent's pieces or blocks them so they cannot move.</p>
+            <button id="how-to-play-close" class="modal-button">Close</button>
+        </div>
+    </div>
+    <audio id="background-music" src="/music/joehisashi.mp3" loop></audio> <!-- Autoplay music-->
     <script src="/js/main.js"></script>
 </body>
 </html>

@@ -24,6 +24,10 @@ header {
     height: auto; /* Maintain aspect ratio */
 }
 
+#player-turn {
+    margin-bottom:10px;
+}
+
 /* Form styles */
 #name-form {
     display: flex;
@@ -144,3 +148,46 @@ header {
     border: 2px solid #FFD700; /* Gold border to indicate selection */
     box-shadow: 0 0 12px #FFD700; /* Gold shadow for better visibility */
 }
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Could be more or less, depending on screen size */
+    text-align: center;
+    color: black
+}
+
+.modal-button {
+    padding: 10px 20px;
+    font-size: 15px;
+    color: #FFFFFF;
+    background-color: #d00000; /* Red background */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.modal-button:hover {
+    background-color: #760000; /* Darker red on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Slightly larger shadow on hover */
+}
+
+.modal-button:active {
+    background-color: #3a0000; /* Even darker red on active */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow on active */
+}
+

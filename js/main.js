@@ -26,6 +26,7 @@ const gameState = {
 };
 
 // Functions
+
 function renderBoard() {
     const gameContainer = document.getElementById('game-container');
     gameContainer.innerHTML = ''; // Clear previous board
@@ -190,7 +191,7 @@ function checkForLegalMoves() {
     const hasLegalMoves = currentPlayerPieces.some(piece => calculatePossibleMoves(piece).length > 0);
 
     if (!hasLegalMoves) {
-        alert(`${gameState.playerNames[gameState.currentPlayer === 'P1' ? 'P2' : 'P1']} wins!`);
+        showWinAnnouncement(`${gameState.playerNames[gameState.currentPlayer === 'P1' ? 'P2' : 'P1']} wins!`);
         resetGame();
     }
 }
@@ -199,10 +200,10 @@ function checkWinCondition() {
     const player1Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P1')).length;
     const player2Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P2')).length;
     if (player1Pieces === 0) {
-        alert(`${gameState.playerNames['P2']} wins! We know who the better player is now!`);
+        showWinAnnouncement(`${gameState.playerNames['P2']} wins! We know who the better player is now!`);
         resetGame();
     } else if (player2Pieces === 0) {
-        alert(`${gameState.playerNames['P1']} wins! We know who the better player is now!`);
+        showWinAnnouncement(`${gameState.playerNames['P1']} wins! We know who the better player is now!`);
         resetGame();
     }
 }
@@ -218,6 +219,35 @@ function resetGame() {
     updateCaptures(); // Reset the UI for captured pieces
 }
 
+// Show player announcement modal
+function showPlayerAnnouncement(message) {
+    const modal = document.getElementById('player-announcement-modal');
+    const modalText = document.getElementById('player-announcement-text');
+    modalText.innerText = message;
+    modal.style.display = 'block';
+}
+
+// Show win announcement modal
+function showWinAnnouncement(message) {
+    const modal = document.getElementById('win-announcement-modal');
+    const modalText = document.getElementById('win-announcement-text');
+    modalText.innerText = message;
+    modal.style.display = 'block';
+}
+
+// Show how to play modal
+function showHowToPlay() {
+    const modal = document.getElementById('how-to-play-modal');
+    modal.style.display = 'block';
+}
+
+// Hide modals
+function hideModals() {
+    document.getElementById('player-announcement-modal').style.display = 'none';
+    document.getElementById('win-announcement-modal').style.display = 'none';
+    document.getElementById('how-to-play-modal').style.display = 'none';
+}
+
 // Handle form submission to capture player names and start the game
 document.getElementById('name-form').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -230,8 +260,8 @@ document.getElementById('name-form').addEventListener('submit', function(event) 
     document.getElementById('name-input-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
 
-    // Display the popup with player colors
-    alert(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
+    // Display the player announcement modal
+    showPlayerAnnouncement(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
 
     // Start the game
     renderBoard();
@@ -249,7 +279,20 @@ document.getElementById('theme-switch-button').addEventListener('click', functio
     }
 });
 
+// Handle how to play button
+document.getElementById('how-to-play-button').addEventListener('click', showHowToPlay);
+
+// Handle modal close buttons
+document.getElementById('player-announcement-close').addEventListener('click', hideModals);
+document.getElementById('win-announcement-close').addEventListener('click', hideModals);
+document.getElementById('how-to-play-close').addEventListener('click', hideModals);
+
 // DOM
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial setup if needed
-});
+    const backgroundMusic = document.getElementById('background-music');
+    backgroundMusic.play().catch(() => {
+        // If autoplay is blocked, wait for user interaction
+        document.addEventListener('click', () => {
+            backgroundMusic.play();
+        }, { once: true });
+    })});
