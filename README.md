@@ -21,7 +21,7 @@ To play the game, visit the following link:
 5. The game ends when one player captures all the opponent's pieces or blocks them from moving.
 
 ### Planning Materials:
-- Link to project-plan.md
+- [Link to project-plan.md](https://github.com/Nottimlim/Checkers-Browser-Game/blob/main/Project-Plan.md)
 
 ## Attributions
 - cobalt.tools
