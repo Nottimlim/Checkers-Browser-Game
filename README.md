@@ -26,7 +26,10 @@ To play the game, visit the following link:
 ## Attributions
 - cobalt.tools
 - https://www.flaticon.com/free-icons/checkers for checkers favicon
-
+- https://www.w3schools.com/
+for learning new methods and etc
+- https://stackoverflow.com/ 
+referencing scenarios and other peoples codes to learn and gain inspiration
 ## Technologies Used
 - HTML
 - CSS
