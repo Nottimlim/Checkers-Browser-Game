@@ -1,104 +1,41 @@
-# Checkers Game Project Planning
-![Checkers](/images/checkers-reference.png)
-## Pseudocode for Overall Gameplay
+# Checkers Game
 
-### Initialize Game State:
-```plaintext
-- Create an 8x8 board with initial positions for P1 and P2 pieces.
-- Set the current player to 'P1'.
-- Initialize selectedPiece to null.
-- Initialize possibleMoves to an empty array.
-```
+![Checkers Game Screenshot](./images/screenshot.png) 
 
-### Render Board:
-```plaintext
-- Loop through the board array.
-- For each cell, create a corresponding HTML element.
-- If the cell contains a piece, add a piece element inside the cell element.
-- Append cell elements to the game container in the DOM.
-```
-### Handle Piece Selection:
-```plaintext
-- Add event listeners to all pieces.
-- When a piece is clicked:
-  * Check if the piece belongs to the current player.
-  *  If yes, set selectedPiece to the clicked piece's
-     position.
-  *  Calculate possible moves for the selected piece.
-  * Highlight the possible moves on the board.
-```
-### Calculate Possible Moves:
-```plaintext
-- Initialize an empty array for possible moves.
- - Determine move directions based on the current player
-    (P1 moves up, P2 moves down).
-- For each direction:
-    * Calculate the new position.
-    * Check if the new position is 
-    within bounds and the cell is empty.
-    * If yes, add the new position to 
-      the possible moves 
-      array.
-- Check for capture moves:
-    * Calculate the position of the
-      opponent's piece.
-    * Calculate the landing position
-      after the capture.
-    * Check if the landing position is
-      within bounds and
-      the cell is empty.
-    * If yes, add the landing position
-      to the possible moves array.
-- Return the possible moves array.
-```
-### Handle Move:
-``` plaintext
-- Add event listeners to all highlighted cells (possible moves).
-- When a highlighted cell is clicked:
-    * Move the selected piece to the new
-      position.
-    * Update the board state.
-    * If it's a capture move, remove the 
-     captured piece from the board.
-    * Clear the selected piece and
-      possible moves.
-    * Switch the current player.
-    * Check for win condition.
-```
-### Check Win Condition:
-```plaintext
-- Count the number of pieces for each player on the board.
-- If a player has no pieces left, declare the other player as the winner.
-- Display a win/loss message in the HTML.
-```
-## Initial Data Structure for Checkers Game State
-### Explanation
-```plaintext
-board: A 2D array representing the 8x8 game board. Each element can be:
+## Game's Name and Description
+**Checkers Game**
 
-null for an empty cell,
-'P1' for a Player 1 piece,
-'P2' for a Player 2 piece.
-currentPlayer: A string indicating whose turn it is. It can be 'P1' or 'P2'.
+This is a web-based Checkers game where two players can compete against each other. The game follows the traditional rules of Checkers, where the goal is to capture all of the opponent's pieces or block them so they cannot move.
 
-selectedPiece: An object representing the currently selected piece. It will store the piece's position on the board (e.g., { row: 5, col: 2 }). Initially, it is set to null.
+### Why I Chose This Game
+I chose to create a Checkers game because it is a classic and strategic board game that many people enjoy. It also provided a good challenge for implementing game logic and user interactions.
 
-possibleMoves: An array of possible moves for the selected piece. Each move is represented as an object with row and col properties (e.g., { row: 4, col: 3 }). Initially, it is an empty array.
-```
+## Getting Started
+To play the game, visit the following link:
 
-```javascript
-const gameState = {
-    board: [
-        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-        ['P2', null, 'P2', null, 'P2', null, 'P2', null],
-        [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-        [null, 'P1', null, 'P1', null, 'P1', null, 'P1'],
-        ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-    ],
-    currentPlayer: 'P1',
-    selectedPiece: null,
-    possibleMoves: [],
-};
+### Instructions:
+1. Enter the names of Player 1 and Player 2.
+2. Click "Start Game" to begin. If you're unsure how to play there's a how to play button.
+3. Players take turns moving their pieces diagonally.
+4. Capture opponent pieces by jumping over them.
+5. The game ends when one player captures all the opponent's pieces or blocks them from moving.
+
+### Planning Materials:
+- Link to project-plan.md
+
+## Attributions
+- cobalt.tools
+- https://www.flaticon.com/free-icons/checkers for checkers favicon
+
+## Technologies Used
+- HTML
+- CSS
+- JavaScript
+
+## Next Steps
+Here are some planned future enhancements for the game:
+- Implementing a single-player mode with AI.
+- Adding more themes and customization options.
+- Improving the user interface and animations for a more engaging experience.
+- Adding sound effects for moves and captures.
+- Implementing king function for pieces that reach the end of the board.
