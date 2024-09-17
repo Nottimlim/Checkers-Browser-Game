@@ -1,6 +1,6 @@
 # Checkers Game
 
-![Checkers Game Screenshot](./images/screenshot.png) 
+![Checkers Game Screenshot](./screenshot.png) 
 
 ## Game's Name and Description
 **Checkers Game**
