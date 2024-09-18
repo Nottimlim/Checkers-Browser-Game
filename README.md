@@ -30,6 +30,7 @@ To play the game, visit the following link:
 for learning new methods and etc
 - https://stackoverflow.com/ 
 referencing scenarios and other peoples codes to learn and gain inspiration
+
 ## Technologies Used
 - HTML
 - CSS
