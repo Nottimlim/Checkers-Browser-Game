@@ -75,6 +75,8 @@ const handlePieceClick = (event) => {
     if (gameState.board[row][col] !== gameState.currentPlayer) return;
 
     if (gameState.selectedPiece) {
+
+    if (gameState.selectedPiece) {
         document.querySelector('.selected')?.classList.remove('selected');
     }
 
