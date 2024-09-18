@@ -272,10 +272,10 @@ document.getElementById('name-form').addEventListener('submit', function(event) 
 // Handle theme switch
 document.getElementById('theme-switch-button').addEventListener('click', function() {
     const themeStylesheet = document.getElementById('theme-stylesheet');
-    if (themeStylesheet.getAttribute('href') === './modern-theme.css') {
-        themeStylesheet.setAttribute('href', './classic-theme.css');
+    if (themeStylesheet.getAttribute('href') === './css/modern-theme.css') {
+        themeStylesheet.setAttribute('href', './css/classic-theme.css');
     } else {
-        themeStylesheet.setAttribute('href', './modern-theme.css');
+        themeStylesheet.setAttribute('href', './css/modern-theme.css');
     }
 });
 
