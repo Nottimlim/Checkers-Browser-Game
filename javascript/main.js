@@ -11,7 +11,7 @@ const initialBoard = [
 ];
 
 const gameState = {
-    board: initialBoard.map(row => row.slice()), // Deep copy of the initial board
+    board: initialBoard.map(row => [...row]), // Deep copy using spread operator
     currentPlayer: 'P1',
     selectedPiece: null,
     possibleMoves: [],
@@ -25,7 +25,7 @@ const gameState = {
     }
 };
 
-// Functions
+// RenderingFunctions
 
 function renderBoard() {
     const gameContainer = document.getElementById('game-container');
@@ -42,19 +42,11 @@ function renderBoard() {
             aCell.dataset.col = colIndex;
 
             // Apply alternating colors
-            if ((rowIndex + colIndex) % 2 === 0) {
-                aCell.classList.add('light');
-            } else {
-                aCell.classList.add('dark');
-            }
+            aCell.classList.add((rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark');
 
             if (cell) {
                 const piece = document.createElement('div');
-                if (cell.includes('P1')) {
-                    piece.className = 'piece player1';
-                } else if (cell.includes('P2')) {
-                    piece.className = 'piece player2';
-                }
+                piece.className = `piece ${cell.toLowerCase()}`;
                 aCell.appendChild(piece);
             }
             rowElement.appendChild(aCell);
@@ -79,6 +71,8 @@ function updateCaptures() {
     document.getElementById('player1-captured-pieces').innerText = gameState.captures.P1;
     document.getElementById('player2-captured-pieces').innerText = gameState.captures.P2;
 }
+
+// Game Logic Functions
 
 function handlePieceClick(event) {
     const piece = event.target;
@@ -219,7 +213,7 @@ function resetGame() {
     updateCaptures(); // Reset the UI for captured pieces
 }
 
-// Show player announcement modal
+// Announcement functions
 function showPlayerAnnouncement(message) {
     const modal = document.getElementById('player-announcement-modal');
     const modalText = document.getElementById('player-announcement-text');
@@ -227,7 +221,6 @@ function showPlayerAnnouncement(message) {
     modal.style.display = 'block';
 }
 
-// Show win announcement modal
 function showWinAnnouncement(message) {
     const modal = document.getElementById('win-announcement-modal');
     const modalText = document.getElementById('win-announcement-text');
@@ -235,41 +228,32 @@ function showWinAnnouncement(message) {
     modal.style.display = 'block';
 }
 
-// Show how to play modal
 function showHowToPlay() {
     const modal = document.getElementById('how-to-play-modal');
     modal.style.display = 'block';
 }
 
-// Hide modals
 function hideModals() {
     document.getElementById('player-announcement-modal').style.display = 'none';
     document.getElementById('win-announcement-modal').style.display = 'none';
     document.getElementById('how-to-play-modal').style.display = 'none';
 }
 
-// Handle form submission to capture player names and start the game
+// Event Listeners
+
 document.getElementById('name-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const player1Name = document.getElementById('player1-name').value;
     const player2Name = document.getElementById('player2-name').value;
     gameState.playerNames.P1 = player1Name;
     gameState.playerNames.P2 = player2Name;
-
-    // Hide the name input screen and show the game screen
     document.getElementById('name-input-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
-
-    // Display the player announcement modal
     showPlayerAnnouncement(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
-
-    // Start the game
     renderBoard();
     updatePlayerTurn();
     updateCaptures(); // Initialize the captured pieces display
 });
-
-// Handle theme switch
 document.getElementById('theme-switch-button').addEventListener('click', function() {
     const themeStylesheet = document.getElementById('theme-stylesheet');
     if (themeStylesheet.getAttribute('href') === './css/modern-theme.css') {
@@ -278,16 +262,10 @@ document.getElementById('theme-switch-button').addEventListener('click', functio
         themeStylesheet.setAttribute('href', './css/modern-theme.css');
     }
 });
-
-// Handle how to play button
 document.getElementById('how-to-play-button').addEventListener('click', showHowToPlay);
-
-// Handle modal close buttons
 document.getElementById('player-announcement-close').addEventListener('click', hideModals);
 document.getElementById('win-announcement-close').addEventListener('click', hideModals);
 document.getElementById('how-to-play-close').addEventListener('click', hideModals);
-
-// DOM
 document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     backgroundMusic.play().catch(() => {
