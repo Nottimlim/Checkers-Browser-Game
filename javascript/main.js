@@ -1,112 +1,97 @@
-// Variables
+// Constants
+const PLAYER_1 = 'P1';
+const PLAYER_2 = 'P2';
+
+// Initial game setup
 const initialBoard = [
-    [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
-    ['P2', null, 'P2', null, 'P2', null, 'P2', null],
-    [null, 'P2', null, 'P2', null, 'P2', null, 'P2'],
+    [null, PLAYER_2, null, PLAYER_2, null, PLAYER_2, null, PLAYER_2],
+    [PLAYER_2, null, PLAYER_2, null, PLAYER_2, null, PLAYER_2, null],
+    [null, PLAYER_2, null, PLAYER_2, null, PLAYER_2, null, PLAYER_2],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
-    ['P1', null, 'P1', null, 'P1', null, 'P1', null],
-    [null, 'P1', null, 'P1', null, 'P1', null, 'P1'],
-    ['P1', null, 'P1', null, 'P1', null, 'P1', null],
+    [PLAYER_1, null, PLAYER_1, null, PLAYER_1, null, PLAYER_1, null],
+    [null, PLAYER_1, null, PLAYER_1, null, PLAYER_1, null, PLAYER_1],
+    [PLAYER_1, null, PLAYER_1, null, PLAYER_1, null, PLAYER_1, null],
 ];
 
 const gameState = {
-    board: initialBoard.map(row => [...row]), // Deep copy using spread operator
-    currentPlayer: 'P1',
+    board: initialBoard.map(row => [...row]),
+    currentPlayer: PLAYER_1,
     selectedPiece: null,
     possibleMoves: [],
-    playerNames: {
-        P1: '',
-        P2: ''
-    },
-    captures: {
-        P1: 0,
-        P2: 0
-    }
+    playerNames: { [PLAYER_1]: '', [PLAYER_2]: '' },
+    captures: { [PLAYER_1]: 0, [PLAYER_2]: 0 }
 };
 
-// RenderingFunctions
-
-function renderBoard() {
+// Rendering Functions
+const renderBoard = () => {
     const gameContainer = document.getElementById('game-container');
-    gameContainer.innerHTML = ''; // Clear previous board
+    gameContainer.innerHTML = '';
 
     gameState.board.forEach((row, rowIndex) => {
         const rowElement = document.createElement('div');
         rowElement.className = 'row';
 
         row.forEach((cell, colIndex) => {
-            const aCell = document.createElement('div');
-            aCell.className = 'cell';
-            aCell.dataset.row = rowIndex;
-            aCell.dataset.col = colIndex;
-
-            // Apply alternating colors
-            aCell.classList.add((rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark');
+            const cellElement = document.createElement('div');
+            cellElement.className = `cell ${(rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark'}`;
+            cellElement.dataset.row = rowIndex;
+            cellElement.dataset.col = colIndex;
 
             if (cell) {
                 const piece = document.createElement('div');
                 piece.className = `piece ${cell.toLowerCase()}`;
-                aCell.appendChild(piece);
+                cellElement.appendChild(piece);
             }
-            rowElement.appendChild(aCell);
+            rowElement.appendChild(cellElement);
         });
         gameContainer.appendChild(rowElement);
     });
 
-    // Add event listeners for piece selection
     document.querySelectorAll('.piece').forEach(piece => {
         piece.addEventListener('click', handlePieceClick);
     });
-}
+};
 
-function updatePlayerTurn() {
+const updatePlayerTurn = () => {
     const playerTurnElement = document.getElementById('player-turn');
     playerTurnElement.innerHTML = `<b>Current Player: ${gameState.playerNames[gameState.currentPlayer]}</b>`;
-}
+};
 
-function updateCaptures() {
-    document.getElementById('player1-capture-title').innerText = `${gameState.playerNames.P1} has captured:`;
-    document.getElementById('player2-capture-title').innerText = `${gameState.playerNames.P2} has captured:`;
-    document.getElementById('player1-captured-pieces').innerText = gameState.captures.P1;
-    document.getElementById('player2-captured-pieces').innerText = gameState.captures.P2;
-}
+const updateCaptures = () => {
+    document.getElementById('player1-capture-title').textContent = `${gameState.playerNames[PLAYER_1]} has captured:`;
+    document.getElementById('player2-capture-title').textContent = `${gameState.playerNames[PLAYER_2]} has captured:`;
+    document.getElementById('player1-captured-pieces').textContent = gameState.captures[PLAYER_1];
+    document.getElementById('player2-captured-pieces').textContent = gameState.captures[PLAYER_2];
+};
 
 // Game Logic Functions
-
-function handlePieceClick(event) {
+const handlePieceClick = (event) => {
     const piece = event.target;
-    const row = piece.parentElement.dataset.row;
-    const col = piece.parentElement.dataset.col;
+    const { row, col } = piece.parentElement.dataset;
     console.log(`Piece clicked: Row ${row}, Col ${col}`);
-    console.log(`Piece value: ${gameState.board[row][col]}`); // Add this line to debug the piece value
-    if (gameState.board[row][col] !== gameState.currentPlayer) {
-        return; // Not the current player's piece
-    }
-    // Deselect previously selected piece
+    console.log(`Piece value: ${gameState.board[row][col]}`);
+
+    if (gameState.board[row][col] !== gameState.currentPlayer) return;
+
     if (gameState.selectedPiece) {
-        const prevSelectedPiece = document.querySelector('.selected');
-        if (prevSelectedPiece) {
-            prevSelectedPiece.classList.remove('selected');
-        }
+        document.querySelector('.selected')?.classList.remove('selected');
     }
-    // Select the new piece
+
     piece.classList.add('selected');
     gameState.selectedPiece = { row: parseInt(row), col: parseInt(col) };
     highlightPossibleMoves();
-}
+};
 
-function highlightPossibleMoves() {
-    // Clear previous highlights
+const highlightPossibleMoves = () => {
     gameState.possibleMoves.forEach(move => {
         const cell = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);
         if (cell) {
             cell.classList.remove('highlight');
-            cell.removeEventListener('click', handleMove); // Remove previous event listeners
+            cell.removeEventListener('click', handleMove);
         }
     });
 
-    // Calculate and highlight new possible moves
     gameState.possibleMoves = calculatePossibleMoves(gameState.selectedPiece);
     console.log('Calculated possible moves for highlighting:', gameState.possibleMoves);
 
@@ -114,25 +99,23 @@ function highlightPossibleMoves() {
         const cell = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);
         if (cell) {
             cell.classList.add('highlight');
-            cell.addEventListener('click', handleMove); // Add new event listeners
+            cell.addEventListener('click', handleMove);
         }
     });
-}
+};
 
-function calculatePossibleMoves(piece) {
+const calculatePossibleMoves = (piece) => {
     const possibleMoves = [];
-    const directions = gameState.currentPlayer === 'P1' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
-    const captureDirections = gameState.currentPlayer === 'P1' ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]];
+    const directions = gameState.currentPlayer === PLAYER_1 ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+    const captureDirections = gameState.currentPlayer === PLAYER_1 ? [[-2, -2], [-2, 2]] : [[2, -2], [2, 2]];
 
     directions.forEach((direction, index) => {
-        const newRow = piece.row + direction[0];
-        const newCol = piece.col + direction[1];
+        const [newRow, newCol] = [piece.row + direction[0], piece.col + direction[1]];
         if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
             if (gameState.board[newRow][newCol] === null) {
                 possibleMoves.push({ row: newRow, col: newCol });
             } else {
-                const captureRow = piece.row + captureDirections[index][0];
-                const captureCol = piece.col + captureDirections[index][1];
+                const [captureRow, captureCol] = [piece.row + captureDirections[index][0], piece.col + captureDirections[index][1]];
                 if (captureRow >= 0 && captureRow < 8 && captureCol >= 0 && captureCol < 8 &&
                     gameState.board[newRow][newCol] !== gameState.currentPlayer &&
                     gameState.board[captureRow][captureCol] === null) {
@@ -144,133 +127,122 @@ function calculatePossibleMoves(piece) {
 
     console.log('Possible moves:', possibleMoves);
     return possibleMoves;
-}
+};
 
-function handleMove(event) {
+const handleMove = (event) => {
     const cell = event.target;
     const newRow = parseInt(cell.dataset.row);
     const newCol = parseInt(cell.dataset.col);
     console.log(`Move to: Row ${newRow}, Col ${newCol}`);
 
-    // Check if the move is a capture move
     const captureMove = gameState.possibleMoves.find(move => move.row === newRow && move.col === newCol && move.capture);
     if (captureMove) {
-        gameState.board[captureMove.capture.row][captureMove.capture.col] = null; // Remove captured piece
-        gameState.captures[gameState.currentPlayer]++; // Increase the capture count
-        updateCaptures(); // Update the UI to show captured pieces
+        gameState.board[captureMove.capture.row][captureMove.capture.col] = null;
+        gameState.captures[gameState.currentPlayer]++;
+        updateCaptures();
     }
 
-    // Move the selected piece to the new position
     gameState.board[newRow][newCol] = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
-    gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col] = null; // Correctly clear the original position
+    gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
 
     gameState.selectedPiece = null;
     gameState.possibleMoves = [];
-    renderBoard(); // Re-render the board to reflect the move
-    switchPlayer(); // Switch to the other player's turn
-    checkWinCondition(); // Check for win/loss condition
-}
+    renderBoard();
+    switchPlayer();
+    checkWinCondition();
+};
 
-function switchPlayer() {
-    gameState.currentPlayer = gameState.currentPlayer === 'P1' ? 'P2' : 'P1';
+const switchPlayer = () => {
+    gameState.currentPlayer = gameState.currentPlayer === PLAYER_1 ? PLAYER_2 : PLAYER_1;
     updatePlayerTurn();
-    checkForLegalMoves(); // Check if the new current player has any legal moves
-}
+    checkForLegalMoves();
+};
 
-function checkForLegalMoves() {
+const checkForLegalMoves = () => {
     const currentPlayerPieces = gameState.board.flatMap((row, rowIndex) =>
         row.map((cell, colIndex) => (cell === gameState.currentPlayer ? { row: rowIndex, col: colIndex } : null))
-    ).filter(piece => piece !== null);
+    ).filter(Boolean);
 
     const hasLegalMoves = currentPlayerPieces.some(piece => calculatePossibleMoves(piece).length > 0);
 
     if (!hasLegalMoves) {
-        showWinAnnouncement(`${gameState.playerNames[gameState.currentPlayer === 'P1' ? 'P2' : 'P1']} wins!`);
+        const winner = gameState.currentPlayer === PLAYER_1 ? PLAYER_2 : PLAYER_1;
+        showWinAnnouncement(`${gameState.playerNames[winner]} wins!`);
         resetGame();
     }
-}
+};
 
-function checkWinCondition() {
-    const player1Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P1')).length;
-    const player2Pieces = gameState.board.flat().filter(cell => cell && cell.includes('P2')).length;
+const checkWinCondition = () => {
+    const player1Pieces = gameState.board.flat().filter(cell => cell === PLAYER_1).length;
+    const player2Pieces = gameState.board.flat().filter(cell => cell === PLAYER_2).length;
+
     if (player1Pieces === 0) {
-        showWinAnnouncement(`${gameState.playerNames['P2']} wins! We know who the better player is now!`);
+        showWinAnnouncement(`${gameState.playerNames[PLAYER_2]} wins! We know who the better player is now!`);
         resetGame();
     } else if (player2Pieces === 0) {
-        showWinAnnouncement(`${gameState.playerNames['P1']} wins! We know who the better player is now!`);
+        showWinAnnouncement(`${gameState.playerNames[PLAYER_1]} wins! We know who the better player is now!`);
         resetGame();
     }
-}
+};
 
-function resetGame() {
-    gameState.board = initialBoard.map(row => row.slice()); // Deep copy of the initial board
-    gameState.currentPlayer = 'P1';
+const resetGame = () => {
+    gameState.board = initialBoard.map(row => [...row]);
+    gameState.currentPlayer = PLAYER_1;
     gameState.selectedPiece = null;
     gameState.possibleMoves = [];
-    gameState.captures = { P1: 0, P2: 0 }; // Reset capture counts
+    gameState.captures = { [PLAYER_1]: 0, [PLAYER_2]: 0 };
     renderBoard();
     updatePlayerTurn();
-    updateCaptures(); // Reset the UI for captured pieces
-}
+    updateCaptures();
+};
 
 // Announcement functions
-function showPlayerAnnouncement(message) {
-    const modal = document.getElementById('player-announcement-modal');
-    const modalText = document.getElementById('player-announcement-text');
-    modalText.innerText = message;
+const showModal = (modalId, message) => {
+    const modal = document.getElementById(modalId);
+    const modalText = modal.querySelector('.modal-text');
+    modalText.textContent = message;
     modal.style.display = 'block';
-}
+};
 
-function showWinAnnouncement(message) {
-    const modal = document.getElementById('win-announcement-modal');
-    const modalText = document.getElementById('win-announcement-text');
-    modalText.innerText = message;
-    modal.style.display = 'block';
-}
+const showPlayerAnnouncement = (message) => showModal('player-announcement-modal', message);
+const showWinAnnouncement = (message) => showModal('win-announcement-modal', message);
+const showHowToPlay = () => document.getElementById('how-to-play-modal').style.display = 'block';
 
-function showHowToPlay() {
-    const modal = document.getElementById('how-to-play-modal');
-    modal.style.display = 'block';
-}
-
-function hideModals() {
-    document.getElementById('player-announcement-modal').style.display = 'none';
-    document.getElementById('win-announcement-modal').style.display = 'none';
-    document.getElementById('how-to-play-modal').style.display = 'none';
-}
+const hideModals = () => {
+    ['player-announcement-modal', 'win-announcement-modal', 'how-to-play-modal'].forEach(modalId => {
+        document.getElementById(modalId).style.display = 'none';
+    });
+};
 
 // Event Listeners
-
-document.getElementById('name-form').addEventListener('submit', function(event) {
+document.getElementById('name-form').addEventListener('submit', (event) => {
     event.preventDefault();
     const player1Name = document.getElementById('player1-name').value;
     const player2Name = document.getElementById('player2-name').value;
-    gameState.playerNames.P1 = player1Name;
-    gameState.playerNames.P2 = player2Name;
+    gameState.playerNames[PLAYER_1] = player1Name;
+    gameState.playerNames[PLAYER_2] = player2Name;
     document.getElementById('name-input-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
     showPlayerAnnouncement(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
     renderBoard();
     updatePlayerTurn();
-    updateCaptures(); // Initialize the captured pieces display
+    updateCaptures();
 });
-document.getElementById('theme-switch-button').addEventListener('click', function() {
+
+document.getElementById('theme-switch-button').addEventListener('click', () => {
     const themeStylesheet = document.getElementById('theme-stylesheet');
-    if (themeStylesheet.getAttribute('href') === './css/modern-theme.css') {
-        themeStylesheet.setAttribute('href', './css/classic-theme.css');
-    } else {
-        themeStylesheet.setAttribute('href', './css/modern-theme.css');
-    }
+    const currentTheme = themeStylesheet.getAttribute('href');
+    themeStylesheet.setAttribute('href', currentTheme.includes('modern-theme.css') ? './css/classic-theme.css' : './css/modern-theme.css');
 });
+
 document.getElementById('how-to-play-button').addEventListener('click', showHowToPlay);
-document.getElementById('player-announcement-close').addEventListener('click', hideModals);
-document.getElementById('win-announcement-close').addEventListener('click', hideModals);
-document.getElementById('how-to-play-close').addEventListener('click', hideModals);
+['player-announcement-close', 'win-announcement-close', 'how-to-play-close'].forEach(id => {
+    document.getElementById(id).addEventListener('click', hideModals);
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     backgroundMusic.play().catch(() => {
-        // If autoplay is blocked, wait for user interaction
-        document.addEventListener('click', () => {
-            backgroundMusic.play();
-        }, { once: true });
-    })});
+        document.addEventListener('click', () => backgroundMusic.play(), { once: true });
+    });
+});
