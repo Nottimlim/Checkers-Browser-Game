@@ -196,12 +196,16 @@ const resetGame = () => {
 // Announcement functions
 const showModal = (modalId, message) => {
     const modal = document.getElementById(modalId);
-    const modalText = modal.querySelector('.modal-text');
-    if (modalText) {
-        modalText.innerHTML = message.replace(/\n/g, '<br>');
-    } else {
-        console.error(`Modal text element not found in modal with id "${modalId}"`);
+    if (!modal) {
+        console.error(`Modal with id "${modalId}" not found`);
+        return;
     }
+    const modalText = modal.querySelector('.modal-text');
+    if (!modalText) {
+        console.error(`Modal text element not found in modal with id "${modalId}"`);
+        return;
+    }
+    modalText.innerHTML = message.replace(/\n/g, '<br>');
     modal.style.display = 'block';
 };
 
@@ -231,6 +235,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePlayerTurn();
         updateCaptures();
     });
+    const backgroundMusic = document.getElementById('background-music');
+    backgroundMusic.play().catch(() => {
+        document.addEventListener('click', () => backgroundMusic.play(), { once: true });
+    });
 });
 
 document.getElementById('theme-switch-button').addEventListener('click', () => {
@@ -242,11 +250,4 @@ document.getElementById('theme-switch-button').addEventListener('click', () => {
 document.getElementById('how-to-play-button').addEventListener('click', showHowToPlay);
 ['player-announcement-close', 'win-announcement-close', 'how-to-play-close'].forEach(id => {
     document.getElementById(id).addEventListener('click', hideModals);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const backgroundMusic = document.getElementById('background-music');
-    backgroundMusic.play().catch(() => {
-        document.addEventListener('click', () => backgroundMusic.play(), { once: true });
-    });
 });
