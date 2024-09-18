@@ -40,16 +40,13 @@ const renderBoard = () => {
 
             if (cell) {
                 const piece = document.createElement('div');
-                piece.className = `piece ${cell.toLowerCase()}`;
+                piece.className = `piece ${cell.toLowerCase()}`; // This should create classes like 'piece p1' or 'piece p2'
+                piece.addEventListener('click', handlePieceClick);
                 cellElement.appendChild(piece);
             }
             rowElement.appendChild(cellElement);
         });
         gameContainer.appendChild(rowElement);
-    });
-
-    document.querySelectorAll('.piece').forEach(piece => {
-        piece.addEventListener('click', handlePieceClick);
     });
 };
 
@@ -73,8 +70,6 @@ const handlePieceClick = (event) => {
     console.log(`Piece value: ${gameState.board[row][col]}`);
 
     if (gameState.board[row][col] !== gameState.currentPlayer) return;
-
-    if (gameState.selectedPiece) {
 
     if (gameState.selectedPiece) {
         document.querySelector('.selected')?.classList.remove('selected');
@@ -202,7 +197,11 @@ const resetGame = () => {
 const showModal = (modalId, message) => {
     const modal = document.getElementById(modalId);
     const modalText = modal.querySelector('.modal-text');
-    modalText.textContent = message;
+    if (modalText) {
+        modalText.innerHTML = message.replace(/\n/g, '<br>');
+    } else {
+        console.error(`Modal text element not found in modal with id "${modalId}"`);
+    }
     modal.style.display = 'block';
 };
 
@@ -217,18 +216,21 @@ const hideModals = () => {
 };
 
 // Event Listeners
-document.getElementById('name-form').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const player1Name = document.getElementById('player1-name').value;
-    const player2Name = document.getElementById('player2-name').value;
-    gameState.playerNames[PLAYER_1] = player1Name;
-    gameState.playerNames[PLAYER_2] = player2Name;
-    document.getElementById('name-input-screen').style.display = 'none';
-    document.getElementById('game-screen').style.display = 'block';
-    showPlayerAnnouncement(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
-    renderBoard();
-    updatePlayerTurn();
-    updateCaptures();
+document.addEventListener('DOMContentLoaded', () => {
+    // All your initialization code, including event listeners, should go here
+    document.getElementById('name-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const player1Name = document.getElementById('player1-name').value;
+        const player2Name = document.getElementById('player2-name').value;
+        gameState.playerNames[PLAYER_1] = player1Name;
+        gameState.playerNames[PLAYER_2] = player2Name;
+        document.getElementById('name-input-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        showPlayerAnnouncement(`${player1Name} is Red\n${player2Name} is Black\nMay the better player win! :)`);
+        renderBoard();
+        updatePlayerTurn();
+        updateCaptures();
+    });
 });
 
 document.getElementById('theme-switch-button').addEventListener('click', () => {
