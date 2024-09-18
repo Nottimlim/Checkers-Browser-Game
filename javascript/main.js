@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('theme-switch-button').addEventListener('click', () => {
     const themeStylesheet = document.getElementById('theme-stylesheet');
     const currentTheme = themeStylesheet.getAttribute('href');
-    themeStylesheet.setAttribute('href', currentTheme.includes('css/modern-theme.css') ? 'css/classic-theme.css' : 'css/modern-theme.css');
+    themeStylesheet.setAttribute('href', currentTheme.includes('./css/modern-theme.css') ? './css/classic-theme.css' : './css/modern-theme.css');
 });
 
 document.getElementById('how-to-play-button').addEventListener('click', showHowToPlay);
