@@ -101,4 +101,15 @@ const gameState = {
     currentPlayer: 'P1',
     selectedPiece: null,
     possibleMoves: [],
-};
+}; 
+```
+
+### Handling Movement Logic
+``` plaintext
+
+When a player clicks on a piece, the game first identifies which piece was clicked and its position on the board. Depending on which player's turn it is, the game calculates the possible directions the piece can move. For example, Player 1 can move diagonally up-left and up-right, while Player 2 can move diagonally down-left and down-right.
+
+The game then checks each direction to see if the move is valid. It does this by calculating the new position the piece would move to and checking if this position is within the bounds of the board and whether the cell is empty. If the cell is empty, it's a valid move. If the cell contains an opponent's piece, the game checks if the piece can jump over the opponent's piece and land in an empty cell beyond it. These valid moves are then highlighted on the board.
+
+When a player clicks on a highlighted cell, the game identifies the target cell and checks if the move involves capturing an opponent's piece. If it does, the opponent's piece is removed from the board. The game then updates the board to move the selected piece to the new position and clears the old position. After the move is made, the game switches the turn to the other player and checks if the move resulted in a win condition, such as capturing all of the opponent's pieces or blocking all possible moves for the opponent. 
+```
