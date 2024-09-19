@@ -40,7 +40,7 @@ const renderBoard = () => {
 
             if (cell) {
                 const piece = document.createElement('div');
-                piece.className = `piece ${cell.toLowerCase()}`; // This should create classes like 'piece p1' or 'piece p2'
+                piece.className = `piece ${cell.toLowerCase()}`; // This creates classes like 'piece p1' or 'piece p2'
                 piece.addEventListener('click', handlePieceClick);
                 cellElement.appendChild(piece);
             }
