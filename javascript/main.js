@@ -27,7 +27,6 @@ const gameState = {
 const renderBoard = () => {
     const gameContainer = document.getElementById('game-container'); // Get the game container element
     gameContainer.innerHTML = ''; // Clear the game container
-
     gameState.board.forEach((row, rowIndex) => { // Loop through each row of the board
         const rowElement = document.createElement('div'); // Create a new div for the row
         rowElement.className = 'row'; // Set the class name for the row
@@ -123,7 +122,6 @@ const calculatePossibleMoves = (piece) => {
             } else {
                 // Calculate the capture position based on the capture direction
                 const [captureRow, captureCol] = [piece.row + captureDirections[index][0], piece.col + captureDirections[index][1]];
-
                 // Check if the capture position is within bounds, the opponent's piece is in the way, and the landing cell is empty
                 if (captureRow >= 0 && captureRow < 8 && captureCol >= 0 && captureCol < 8 &&
                     gameState.board[newRow][newCol] !== gameState.currentPlayer &&
@@ -225,7 +223,6 @@ const showModal = (modalId, message) => {
 const showPlayerAnnouncement = (message) => showModal('player-announcement-modal', message); // Show player announcement modal
 const showWinAnnouncement = (message) => showModal('win-announcement-modal', message); // Show win announcement modal
 const showHowToPlay = () => document.getElementById('how-to-play-modal').style.display = 'block'; // Show how-to-play modal
-
 const hideModals = () => {
     ['player-announcement-modal', 'win-announcement-modal', 'how-to-play-modal'].forEach(modalId => {
         document.getElementById(modalId).style.display = 'none'; // Hide all modals
