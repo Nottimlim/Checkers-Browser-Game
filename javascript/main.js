@@ -31,13 +31,11 @@ const renderBoard = () => {
     gameState.board.forEach((row, rowIndex) => { // Loop through each row of the board
         const rowElement = document.createElement('div'); // Create a new div for the row
         rowElement.className = 'row'; // Set the class name for the row
-
         row.forEach((cell, colIndex) => { // Loop through each cell in the row
             const cellElement = document.createElement('div'); // Create a new div for the cell
             cellElement.className = `cell ${(rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark'}`; // Set the class name based on the cell color
             cellElement.dataset.row = rowIndex; // Set the row index as a data attribute
             cellElement.dataset.col = colIndex; // Set the column index as a data attribute
-
             if (cell) { // If the cell is not empty
                 const piece = document.createElement('div'); // Create a new div for the piece
                 piece.className = `piece ${cell.toLowerCase()}`; // Set the class name for the piece
